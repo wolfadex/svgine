@@ -11,16 +11,6 @@
 // 	vector2,
 // 	View,
 // }
-import React from 'react';
+const carl = () => 'Carl was here';
 
-class Carl extends React.Component {
-    render() {
-        return (
-            <div>
-                Carl was here
-            </div>
-        )
-    }
-};
-
-export default Carl;
+export default carl;
