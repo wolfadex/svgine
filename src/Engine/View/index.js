@@ -17,7 +17,7 @@ export const toPath = (points) => points.split(', ').reduce((t, pos) => t === ''
 }) => ({
 	gameObjects,
 }))
-class Board extends Component {
+class View extends Component {
 	constructor(props) {
 		super(props);
 
@@ -99,6 +99,10 @@ class Board extends Component {
 						} = {},
 						stroke = 'white',
 					} = gameObjects[k];
+					if (!render) {
+						return null;
+					}
+					
 					const renderProps = {
 						key: k,
 						style: {
@@ -147,4 +151,4 @@ class Board extends Component {
 	}
 }
 
-export default Board;
+export default View;

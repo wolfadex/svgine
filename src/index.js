@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import reducers from 'reducers';
-import Board from 'root/View/Board';
+import View from 'root/Engine/View';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
@@ -17,7 +17,7 @@ render(
 	<Provider
 		store={store}
 	>
-		<Board />
+		<View />
 	</Provider>,
 	document.getElementById('siteRoot')
 );
