@@ -1,5 +1,6 @@
 import Vector2, { add, multiply, angleToVector, max, wrap } from 'root/vector2';
 import { getBounds } from 'root/View/Board';
+import * as gameStateActions from 'actions/gameState';
 import bullet from 'root/Game/bullet';
 
 const keyMap = {
@@ -32,7 +33,7 @@ export default {
 		position: Vector2(),
 		rotation: 0,
 	},
-	path: 'M-24 -16 L-24 16 L24 0 Z',
+	render: '-24 -16, -24 16, 24 0, -24 -16',
 	init: (gameObjectData) => {
 		const {
 			height,
@@ -51,53 +52,58 @@ export default {
 		gameObjectData,
 		gameState,
 		{
-			registerGameObject,
-			unregisterGameObject,
+			addGameObject,
+			updateGameObject,
 		},
 	) => {
 		const {
-			transform: {
-				rotation,
-				position,
-			} = {},
-			props: {
-				acceleration,
-				maxVelocity,
-				rotationSpeed,
-				velocity,
-				timeBetweenShots,
-				timeTillNextShot,
-			} = {},
-			guid,
-		} = gameObjectData;
-		const {
-			keys,
+			paused,
 		} = gameState;
-		const {
-			height,
-			width,
-		} = getBounds();
-		const newVelocity = max(add(velocity, multiply(angleToVector(rotation), acceleration * thrust(keys))), maxVelocity);
-		let newTimeTillNextShot = timeTillNextShot - deltaTime;
 
-		if (timeTillNextShot <= 0 && keys[keyMap.SHOOT]) {
-			console.log('carl');
-			newTimeTillNextShot = timeBetweenShots;
-			registerGameObject(bullet);
-		}
+		if (!paused) {
+			const {
+				transform: {
+					rotation,
+					position,
+				} = {},
+				props: {
+					acceleration,
+					maxVelocity,
+					rotationSpeed,
+					velocity,
+					timeBetweenShots,
+					timeTillNextShot,
+				} = {},
+				guid,
+			} = gameObjectData;
+			const {
+				keys,
+			} = gameState;
+			const {
+				height,
+				width,
+			} = getBounds();
+			const newVelocity = max(add(velocity, multiply(angleToVector(rotation), acceleration * thrust(keys))), maxVelocity);
+			let newTimeTillNextShot = timeTillNextShot - deltaTime;
 
-		return Object.assign({}, gameObjectData, {
-			props: Object.assign({}, gameObjectData.props, {
-				velocity: newVelocity,
-				timeTillNextShot: newTimeTillNextShot,
-			}),
-			transform: Object.assign({}, gameObjectData.transform, {
-				rotation: (rotation + deltaTime * rotationSpeed * rotateDirection(keys) + 360) % 360,
-				position: wrap(add(position, multiply(newVelocity, deltaTime)), {
-					right: width,
-					bottom: height,
+			if (timeTillNextShot <= 0 && keys[keyMap.SHOOT]) {
+				newTimeTillNextShot = timeBetweenShots;
+				addGameObject(bullet, add(position, multiply(angleToVector(rotation), 20)), rotation);
+			}
+
+			updateGameObject(Object.assign({}, gameObjectData, {
+				props: Object.assign({}, gameObjectData.props, {
+					velocity: newVelocity,
+					timeTillNextShot: newTimeTillNextShot,
 				}),
-			}),
-		});
+				transform: Object.assign({}, gameObjectData.transform, {
+					rotation: (rotation + deltaTime * rotationSpeed * rotateDirection(keys) + 360) % 360,
+					position: wrap(add(position, multiply(newVelocity, deltaTime)), {
+						right: width,
+						bottom: height,
+					}),
+				}),
+			}));
+		}
 	},
 };

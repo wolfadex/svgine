@@ -5,9 +5,11 @@ export const updateTime = (time) => ({
 	time,
 });
 
-export const addGameObject = (gameObject) => ({
+export const addGameObject = (gameObject, position, rotation) => ({
 	type: types.ADD_GAME_OBJECT,
 	gameObject,
+	position,
+	rotation,
 });
 
 export const removeGameObject = (guidToRemove) => ({
@@ -28,4 +30,9 @@ export const keyDown = (key) => ({
 export const keyUp = (key) => ({
 	type: types.KEY_UP,
 	key,
+});
+
+export const paused = (paused) => ({
+	type: types.PAUSE,
+	paused,
 });

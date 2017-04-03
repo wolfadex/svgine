@@ -2,19 +2,23 @@ import * as types from 'root/ActionTypes';
 import { guid } from 'root/helpers';
 
 const initialState = {
-	time: null,
 	gameObjects: {},
 	keys: {},
+	paused: false,
+	time: null,
 };
 
 export default function gameStateReducer(
 	state = initialState,
 	{
-		type,
-		time,
-		guidToRemove,
 		gameObject,
+		guidToRemove,
 		key,
+		paused,
+		position,
+		rotation,
+		time,
+		type,
 	}
 ) {
 	switch(type) {
@@ -22,12 +26,21 @@ export default function gameStateReducer(
 			return Object.assign({}, state, {
 				time,
 			});
+		case types.PAUSE:
+			return Object.assign({}, state, {
+				paused,
+			});
 		case types.ADD_GAME_OBJECT:
 			const newGUID = guid();
 
 			return Object.assign({}, state, {
 				gameObjects: Object.assign({}, state.gameObjects, {
-					[newGUID]: Object.assign({}, (gameObject.init && gameObject.init(gameObject, state) || gameObject), {
+					[newGUID]: Object.assign({}, gameObject, {
+						transform: Object.assign({}, gameObject.transform, {
+							rotation: rotation != null ? rotation : gameObject.transform.rotation,
+							position: position != null ? position : gameObject.transform.position,
+						}),
+					}, gameObject.init && gameObject.init(gameObject, state), {
 						guid: newGUID,
 					}),
 				}),

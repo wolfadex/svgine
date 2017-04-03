@@ -5,39 +5,62 @@ export default {
 	// Optional
 	props: {
 		// Custom
-		velocity: Vector2(),
+		speed: 1000,
+		maxLife: 3,
+		livedFor: 0,
 	},
 	// Required
 	transform: {
-		position: Vector2(),
+		position: Vector2(50, 50),
 		rotation: 0,
 	},
-	path: 'M4 0 L-4 0 Z',
-	// update:(
-	// 	deltaTime,
-	// 	gameObjectData,
-	// ) => {
-	// 	const {
-	// 		transform: {
-	// 			rotation,
-	// 			position,
-	// 		} = {},
-	// 		props: {
-	// 			velocity,
-	// 		} = {},
-	// 	} = gameObjectData;
-	// 	const {
-	// 		height,
-	// 		width,
-	// 	} = getBounds();
-	//
-	// 	return Object.assign({}, gameObjectData, {
-	// 		transform: Object.assign({}, gameObjectData.transform, {
-	// 			position: wrap(add(position, multiply(velocity, deltaTime)), {
-	// 				right: width,
-	// 				bottom: height,
-	// 			}),
-	// 		}),
-	// 	});
-	// },
+	render: '4 0, -4 0',
+	update:(
+		deltaTime,
+		gameObjectData,
+		gameState,
+		{
+			updateGameObject,
+			removeGameObject,
+		},
+	) => {
+		const {
+			paused,
+		} = gameState;
+
+		if (!paused) {
+			const {
+				transform: {
+					rotation,
+					position,
+				} = {},
+				props: {
+					livedFor,
+					maxLife,
+					speed,
+				} = {},
+			} = gameObjectData;
+			const {
+				height,
+				width,
+			} = getBounds();
+
+			if (livedFor >= maxLife) {
+				removeGameObject(gameObjectData.guid);
+			}
+			else {
+				updateGameObject(Object.assign({}, gameObjectData, {
+					props: Object.assign({}, gameObjectData.props, {
+						livedFor: livedFor + deltaTime,
+					}),
+					transform: Object.assign({}, gameObjectData.transform, {
+						position: wrap(add(position, multiply(multiply(angleToVector(rotation), speed), deltaTime)), {
+							right: width,
+							bottom: height,
+						}),
+					}),
+				}));
+			}
+		}
+	},
 };

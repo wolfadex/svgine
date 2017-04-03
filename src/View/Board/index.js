@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import * as gameStateActions from 'actions/gameState';
 import { engineHeart } from 'root/Engine/Heart';
 import ship from 'root/Game/ship';
 
-const aspectRatio = 0.9;
+// const aspectRatio = 0.9;
 
 export const getBounds = () => document.getElementById('board').getBoundingClientRect();
+export const toPath = (points) => points.split(', ').reduce((t, pos) => t === '' ? `M${pos}` : `${t} L${pos}`, '');
 
 @engineHeart
+@connect(({
+	gameState: {
+		gameObjects,
+	} = {},
+}) => ({
+	gameObjects,
+}))
 class Board extends Component {
 	constructor(props) {
 		super(props);
@@ -21,24 +31,24 @@ class Board extends Component {
 	}
 
 	componentWillMount() {
-		window.addEventListener('resize', this.handleResize);
+		// window.addEventListener('resize', this.handleResize);
 	}
 
 	componentDidMount() {
 		const {
-			registerGameObject,
+			dispatch,
 		} = this.props;
+		//
+		// this.setState(Object.assign({}, this.state, {
+		// 	width: window.innerWidth,
+		// 	height: window.innerHeight,
+		// }));
 
-		this.setState(Object.assign({}, this.state, {
-			width: window.innerWidth,
-			height: window.innerHeight,
-		}));
-
-		setTimeout(() => registerGameObject(ship), 1);
+		setTimeout(() => dispatch(gameStateActions.addGameObject(ship)), 1);
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('resize', this.handleResize);
+		// window.removeEventListener('resize', this.handleResize);
 	}
 
 	render() {
@@ -61,8 +71,10 @@ class Board extends Component {
 		return (
 			<svg
 				id='board'
-				width={width * aspectRatio}
-				height={height * aspectRatio}
+				// width={width * aspectRatio}
+				// height={height * aspectRatio}
+				width='800'
+				height='600'
 				style={{
 					backgroundColor: 'black',
 					position: 'absolute',
@@ -73,7 +85,7 @@ class Board extends Component {
 			>
 				{Object.keys(gameObjects).map((k) => {
 					const {
-						path,
+						render,
 						transform: {
 							position: {
 								x = 0,
@@ -87,15 +99,39 @@ class Board extends Component {
 						} = {},
 						stroke = 'white',
 					} = gameObjects[k];
+					const renderProps = {
+						key: k,
+						style: {
+							transform: `translate(${x}px, ${y}px) rotateZ(${rotation}deg) scale(${scaleX}, ${scaleY})`,
+						},
+					};
+					// 'M-24 -16 L-24 16 L24 0 Z'
+
+					if (Array.isArray(render)) {
+						return (
+							<g
+								{...renderProps}
+							>
+								{render.map((points, i) =>
+									<path
+										key={`${k}-${i}`}
+										stroke={stroke}
+										d={toPath(points)}
+									/>
+								)}
+							</g>
+						);
+					}
+
+					if (typeof render === 'function') {
+
+					}
 
 					return (
 						<path
-							key={k}
 							stroke={stroke}
-							d={path}
-							style={{
-								transform: `translate(${x}px, ${y}px) rotateZ(${rotation}deg) scale(${scaleX}, ${scaleY})`,
-							}}
+							d={toPath(render)}
+							{...renderProps}
 						/>
 					);
 				})}

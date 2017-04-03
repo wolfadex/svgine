@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
+import ifvisible from 'ifvisible.js';
 import { connect } from 'react-redux';
 import * as gameStateActions from 'actions/gameState';
 
 export const engineHeart = (ViewComponent, data) =>
-	connect()(
+	connect(({
+		gameState,
+	}) => ({
+		gameState,
+	}))(
 	class extends Component {
 		constructor(props) {
 			super(props);
@@ -24,19 +29,23 @@ export const engineHeart = (ViewComponent, data) =>
 		}
 
 		componentDidMount() {
+			const {
+				dispatch,
+			} = this.props;
+
+			ifvisible.on('blur', () => {
+				dispatch(gameStateActions.paused(true));
+			});
+			ifvisible.on('focus', () => {
+				dispatch(gameStateActions.updateTime(performance.now()));
+				dispatch(gameStateActions.paused());
+			});
 			requestAnimationFrame(this.tick);
 		}
 
 		render() {
-			const {
-				gameObjects,
-			} = this.state;
-
 			return (
-				<ViewComponent
-					registerGameObject={this.registerGameObject}
-					gameObjects={gameObjects}
-				/>
+				<ViewComponent {...this.props} />
 			);
 		}
 
@@ -48,24 +57,21 @@ export const engineHeart = (ViewComponent, data) =>
 			const {
 				time,
 				gameObjects,
-				keys,
 			} = gameState;
-			const newTime = Date.now();
+			const newTime = timestamp;
 
 			// Update state
-			// dispatch()
-			this.setState(Object.assign({}, this.state, {
-				time: newTime,
-				gameObjects: Object.keys(gameObjects).forEach((k) => gameObjects[k].update && gameObjects[k].update(
-						(newTime - time) / 1000,
-						gameObjects[k],
-						this.state,
-						{
-							registerGameObject: this.registerGameObject,
-							unregisterGameObject: this.unregisterGameObject,
-						},
-					)),
-			}));
+			dispatch(gameStateActions.updateTime(newTime));
+			Object.keys(gameObjects).forEach((k) => gameObjects[k].update && gameObjects[k].update(
+				(newTime - time) / 1000,
+				gameObjects[k],
+				gameState,
+				{
+					updateGameObject: (go) => dispatch(gameStateActions.updateGameObject(go)),
+					addGameObject: (go, pos, rot) => dispatch(gameStateActions.addGameObject(go, pos, rot)),
+					removeGameObject: (id) => dispatch(gameStateActions.removeGameObject(id)),
+				},
+			));
 
 			requestAnimationFrame(this.tick);
 		}
@@ -77,13 +83,16 @@ export const engineHeart = (ViewComponent, data) =>
 			shiftKey,
 		}) {
 			const {
-				keys,
-			} = this.state;
+				dispatch,
+				gameState: {
+					keys,
+				} = {}
+			} = this.props;
 
-			this.setState(Object.assign({}, this.state, {
-				keys: Object.assign({}, keys, {
-					[keyCode]: true,
-				})
+			dispatch(gameStateActions.keyDown(keyCode, {
+				altKey,
+				ctrlKey,
+				shiftKey,
 			}));
 		}
 
@@ -94,13 +103,16 @@ export const engineHeart = (ViewComponent, data) =>
 			shiftKey,
 		}) {
 			const {
-				keys,
-			} = this.state;
+				dispatch,
+				gameState: {
+					keys,
+				} = {}
+			} = this.props;
 
-			this.setState(Object.assign({}, this.state, {
-				keys: Object.assign({}, keys, {
-					[keyCode]: false,
-				})
+			dispatch(gameStateActions.keyUp(keyCode, {
+				altKey,
+				ctrlKey,
+				shiftKey,
 			}));
 		}
 	});
