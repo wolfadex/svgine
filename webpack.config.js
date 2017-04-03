@@ -6,11 +6,16 @@ module.exports = {
 	output: {
 		path: path.resolve(__dirname, 'dist'),
 		filename: 'index.js',
-		publicPath: 'dist/',
+		library: 'svgine',
+		libraryTarget: 'umd',
 	},
 	devServer: {
 		compress: true,
 		port: 9000,
+	},
+	externals: {
+		react: 'react',
+		'react-dom': 'react-dom',
 	},
 	resolve: {
 		alias: {
