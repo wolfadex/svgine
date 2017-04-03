@@ -1,5 +1,5 @@
-import * as types from 'root/ActionTypes';
-import { guid } from 'root/helpers';
+import * as types from '../ActionTypes';
+import { guid } from '../helpers';
 
 const initialState = {
 	gameObjects: {},

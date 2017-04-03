@@ -1,4 +1,4 @@
-import { degreeToRadian } from 'root/helpers';
+import { degreeToRadian } from './helpers';
 
 const Vector2 = (x = 0, y = 0) => ({ x, y });
 

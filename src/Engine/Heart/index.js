@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ifvisible from 'ifvisible.js';
 import { connect } from 'react-redux';
-import * as gameStateActions from 'actions/gameState';
+import * as gameStateActions from '../../actions/gameState';
 
 export const engineHeart = (ViewComponent, data) =>
 	connect(({

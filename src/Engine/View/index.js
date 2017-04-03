@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as gameStateActions from 'actions/gameState';
-import { engineHeart } from 'root/Engine/Heart';
-import ship from 'root/Game/ship';
-
-// const aspectRatio = 0.9;
+import * as gameStateActions from '../../actions/gameState';
+import { engineHeart } from '../Heart';
 
 export const getBounds = () => document.getElementById('board').getBoundingClientRect();
 export const toPath = (points) => points.split(', ').reduce((t, pos) => t === '' ? `M${pos}` : `${t} L${pos}`, '');
@@ -37,6 +34,7 @@ class View extends Component {
 	componentDidMount() {
 		const {
 			dispatch,
+			game: gameStart,
 		} = this.props;
 		//
 		// this.setState(Object.assign({}, this.state, {
@@ -44,7 +42,9 @@ class View extends Component {
 		// 	height: window.innerHeight,
 		// }));
 
-		setTimeout(() => dispatch(gameStateActions.addGameObject(ship)), 1);
+		setTimeout(() => gameStart({
+			addGameObject: (go, pos, rot) => dispatch(gameStateActions.addGameObject(go, pos, rot)),
+		}), 1);
 	}
 
 	componentWillUnmount() {
@@ -102,7 +102,7 @@ class View extends Component {
 					if (!render) {
 						return null;
 					}
-					
+
 					const renderProps = {
 						key: k,
 						style: {
