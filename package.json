@@ -5,9 +5,7 @@
   "author": "Wolfgang Schuster",
   "license": "MIT",
   "scripts": {
-    "asteroids": "webpack-dev-server --open",
-    "build": "webpack",
-    "build-asteroids": "webpack --config ./example/Asteroids/webpack.config.js"
+    "build": "webpack"
   },
   "devDependencies": {
     "babel-core": "^6.24.0",
