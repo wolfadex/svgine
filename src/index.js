@@ -4,7 +4,7 @@ import Heart from './Engine/Heart';
 import View from './Engine/View';
 import * as vector2 from './vector2';
 
-export default {
+export {
 	// svgineActions: gameStateActions,
 	reducer,
 	// Heart,
