@@ -1,7 +1,7 @@
 {
   "name": "svgine",
-  "version": "1.1.0",
-  "main": "./dist/index.js",
+  "version": "1.0.0",
+  "main": "./index.js",
   "author": "Wolfgang Schuster",
   "license": "MIT",
   "scripts": {
