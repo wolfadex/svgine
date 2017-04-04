@@ -6,7 +6,6 @@
 	],
 	"plugins": [
 		"transform-decorators-legacy",
-		"babel-plugin-add-module-exports",
 		"syntax-class-properties",
 	    "transform-class-properties",
 	    "transform-es2015-arrow-functions",
