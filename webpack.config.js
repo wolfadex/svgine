@@ -1,58 +1,76 @@
-const path = require('path');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+'use strict'
 
-module.exports = {
-	entry: './src/index.js',
-	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: 'index.js',
-		library: 'svgine',
-		libraryTarget: 'umd',
-	},
-	devServer: {
-		compress: true,
-		port: 9000,
-	},
+var webpack = require('webpack')
+var env = process.env.NODE_ENV
+
+var reactExternal = {
+  root: 'React',
+  commonjs2: 'react',
+  commonjs: 'react',
+  amd: 'react'
+};
+
+var reactReduxExternal = {
+  root: 'ReactRedux',
+  commonjs2: 'react-redux',
+  commonjs: 'react-redux',
+  amd: 'react-redux'
+};
+
+var ifvisibleExternal = {
+  root: 'ifvisible.js',
+  commonjs2: 'ifvisible.js',
+  commonjs: 'ifvisible.js',
+  amd: 'ifvisible.js'
+};
+
+var config = {
 	externals: {
-		react: 'react',
-		'react-dom': 'react-dom',
+		'react': reactExternal,
+		'react-redux': reactReduxExternal,
+		'ifvisible.js': ifvisibleExternal,
 	},
-	resolve: {
-		alias: {
-			actions: path.resolve(__dirname, 'src/actions'),
-			assets: path.resolve(__dirname, 'src/assets'),
-			components: path.resolve(__dirname, 'src/components'),
-			containers: path.resolve(__dirname, 'src/containers'),
-			reducers: path.resolve(__dirname, 'src/reducers'),
-			root: path.resolve(__dirname, 'src'),
-			utils: path.resolve(__dirname, 'src/utils'),
-		},
-	},
-	devtool: 'eval-source-map',
 	module: {
-		rules: [
+		loaders: [
 			{
 				test: /\.js$/,
-				exclude: /node_modules/,
-				use: 'babel-loader',
-			},
-			{
-				test: /\.css$/,
-				use: ExtractTextPlugin.extract({
-					fallback: 'style-loader',
-					use: 'css-loader'
-				})
-			},
-			{
-				test: /\.less$/,
-				use: ExtractTextPlugin.extract({
-					fallback: 'style-loader',
-					use: 'css-loader!less-loader'
-				})
+				loaders: ['babel-loader'],
+				exclude: /node_modules/
 			},
 		],
 	},
+	output: {
+		library: 'ReactSVGine',
+		libraryTarget: 'umd',
+	},
 	plugins: [
-		new ExtractTextPlugin('styles.css'),
-	],
+		{
+			apply: function apply(compiler) {
+				compiler.parser.plugin('expression global', function expressionGlobalPlugin() {
+						this.state.module.addVariable('global', "(function() { return this; }()) || Function('return this')()")
+						return false
+					});
+			}
+		},
+		// new webpack.optimize.OccurenceOrderPlugin(),
+		new webpack.DefinePlugin({
+			'process.env.NODE_ENV': JSON.stringify(env)
+		})
+	]
 };
+
+if (env === 'production') {
+	config.plugins.push(
+		new webpack.optimize.UglifyJsPlugin({
+			compressor: {
+				pure_getters: true,
+				unsafe: true,
+				unsafe_comps: true,
+				screw_ie8: true,
+				warnings: false
+			}
+		})
+	)
+}
+
+module.exports = config

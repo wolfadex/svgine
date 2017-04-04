@@ -4,8 +4,4 @@ import { default as reducer } from './reducers/gameState';
 import View from './Engine/View';
 import * as vector2 from './vector2';
 
-export {
-	View,
-	reducer,
-	vector2,
-}
+export { View, reducer, vector2 };
