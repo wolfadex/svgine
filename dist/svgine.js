@@ -222,10 +222,17 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 			'svg',
 			{
 				id: 'board',
-				width: width / scaler,
-				height: height / scaler,
-				style: {
-					backgroundColor: 'black'
+				viewBox: `0 0 ${width} ${height}`,
+				preserveAspectRatio: true
+				// width={width}
+				// height={height}
+				, style: {
+					backgroundColor: 'black',
+					// position: 'absolute',
+					// top: '50%',
+					// left: '50%',
+					// transform: 'translate(-50%, -50%)',
+					transform: `scale(${1}, ${1})`
 				}
 			},
 			Object.keys(gameObjects).map(function (k) {

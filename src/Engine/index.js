@@ -70,14 +70,17 @@ class Engine extends Component {
 		return (
 			<svg
 				id='board'
-				width={width / scaler}
-				height={height / scaler}
+				viewBox={`0 0 ${width} ${height}`}
+				preserveAspectRatio
+				// width={width}
+				// height={height}
 				style={{
 					backgroundColor: 'black',
 					// position: 'absolute',
 					// top: '50%',
 					// left: '50%',
 					// transform: 'translate(-50%, -50%)',
+					transform: `scale(${1}, ${1})`,
 				}}
 			>
 				{Object.keys(gameObjects).map((k) => {
