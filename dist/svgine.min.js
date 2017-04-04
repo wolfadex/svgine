@@ -185,7 +185,8 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 
 	componentDidMount() {
 		var {
-			dispatch
+			dispatch,
+			game: gameStart
 		} = this.props;
 
 		__WEBPACK_IMPORTED_MODULE_1_ifvisible_js___default.a.on('blur', function () {

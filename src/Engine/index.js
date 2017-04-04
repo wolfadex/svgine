@@ -39,6 +39,7 @@ class Engine extends Component {
 	componentDidMount() {
 		const {
 			dispatch,
+			game: gameStart,
 		} = this.props;
 
 		ifvisible.on('blur', () => {
