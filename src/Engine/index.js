@@ -58,8 +58,9 @@ class Engine extends Component {
 		const {
 			width = 800,
 			height = 600,
-			gameObjects,
-			...otherGameProps
+			gameState: {
+				gameObjects,
+			} = {},
 		} = this.props;
 		const {
 			scaler,

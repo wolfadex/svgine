@@ -140,8 +140,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _dec, _class;
 
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
 
 
 
@@ -208,13 +206,13 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 	}
 
 	render() {
-		var _props = this.props,
-		    {
+		var {
 			width = 800,
 			height = 600,
-			gameObjects
-		} = _props,
-		    otherGameProps = _objectWithoutProperties(_props, ['width', 'height', 'gameObjects']);
+			gameState: {
+				gameObjects
+			} = {}
+		} = this.props;
 		var {
 			scaler
 		} = this.state;

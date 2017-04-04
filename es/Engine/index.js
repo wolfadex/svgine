@@ -2,8 +2,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _dec, _class;
 
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
 import React, { Component } from 'react';
 import ifvisible from 'ifvisible.js';
 import { connect } from 'react-redux';
@@ -70,13 +68,13 @@ var Engine = (_dec = connect(function ({
 	}
 
 	render() {
-		var _props = this.props,
-		    {
+		var {
 			width = 800,
 			height = 600,
-			gameObjects
-		} = _props,
-		    otherGameProps = _objectWithoutProperties(_props, ['width', 'height', 'gameObjects']);
+			gameState: {
+				gameObjects
+			} = {}
+		} = this.props;
 		var {
 			scaler
 		} = this.state;
