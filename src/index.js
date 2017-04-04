@@ -1,11 +1,9 @@
-// import * as gameStateActions from './actions/gameState';
 import { default as reducer } from './reducers/gameState';
-// import Heart from './Engine/Heart';
-import View from './Engine/View';
+import Engine from './Engine';
 import * as vector2 from './vector2';
 
 export {
-	View,
+	Engine,
 	reducer,
 	vector2,
 }
