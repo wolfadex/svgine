@@ -210,6 +210,7 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 		var {
 			width = 800,
 			height = 600,
+			background = 'black',
 			gameState: {
 				gameObjects
 			} = {}
@@ -223,13 +224,16 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 			{
 				id: 'board',
 				viewBox: `0 0 ${width} ${height}`,
-				width: `${width}`,
-				height: `${height}`,
-				preserveAspectRatio: 'xMidYMid',
-				style: {
-					backgroundColor: 'black'
-				}
+				width: '100%',
+				height: '100%',
+				preserveAspectRatio: 'xMidYMid'
 			},
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('rect', {
+				sroke: 'none',
+				fill: background,
+				width: width,
+				height: height
+			}),
 			Object.keys(gameObjects).map(function (k) {
 				var {
 					render,

@@ -59,6 +59,7 @@ class Engine extends Component {
 		const {
 			width = 800,
 			height = 600,
+			background = 'black',
 			gameState: {
 				gameObjects,
 			} = {},
@@ -71,13 +72,16 @@ class Engine extends Component {
 			<svg
 				id='board'
 				viewBox={`0 0 ${width} ${height}`}
-				width={`${width}`}
-				height={`${height}`}
+				width='100%'
+				height='100%'
 				preserveAspectRatio='xMidYMid'
-				style={{
-					backgroundColor: 'black',
-				}}
 			>
+				<rect
+					sroke='none'
+					fill={background}
+					width={width}
+					height={height}
+				/>
 				{Object.keys(gameObjects).map((k) => {
 					const {
 						render,
