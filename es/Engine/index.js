@@ -85,16 +85,11 @@ var Engine = (_dec = connect(function ({
 			{
 				id: 'board',
 				viewBox: `0 0 ${width} ${height}`,
-				preserveAspectRatio: true
-				// width={width}
-				// height={height}
-				, style: {
-					backgroundColor: 'black',
-					// position: 'absolute',
-					// top: '50%',
-					// left: '50%',
-					// transform: 'translate(-50%, -50%)',
-					transform: `scale(${1}, ${1})`
+				width: `${width}`,
+				height: `${height}`,
+				preserveAspectRatio: 'xMidYMid',
+				style: {
+					backgroundColor: 'black'
 				}
 			},
 			Object.keys(gameObjects).map(function (k) {
