@@ -17,23 +17,16 @@ class Engine extends Component {
 		this.tick = this.tick.bind(this);
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
-		this.handleResize = this.handleResize.bind(this);
-
-		this.state = {
-			scaler: 1,
-		};
 	}
 
 	componentWillMount() {
 		window.addEventListener('keydown', this.handleKeyDown);
 		window.addEventListener('keyup', this.handleKeyUp);
-		window.addEventListener('resize', this.handleResize);
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener('keydown', this.handleKeyDown);
 		window.removeEventListener('keyup', this.handleKeyUp);
-		window.removeEventListener('resize', this.handleResize);
 	}
 
 	componentDidMount() {
@@ -64,9 +57,6 @@ class Engine extends Component {
 				gameObjects,
 			} = {},
 		} = this.props;
-		const {
-			scaler,
-		} = this.state;
 
 		return (
 			<svg
@@ -76,6 +66,14 @@ class Engine extends Component {
 				height='100%'
 				preserveAspectRatio='xMidYMid'
 			>
+				<filter
+					id='vectorMonitorEffect'
+				>
+					<feGaussianBlur
+						in='SourceGraphic'
+						stdDeviation='2'
+					/>
+				</filter>
 				<rect
 					sroke='none'
 					fill={background}
@@ -108,33 +106,45 @@ class Engine extends Component {
 							transform: `translate(${x}px, ${y}px) rotateZ(${rotation}deg) scale(${scaleX}, ${scaleY})`,
 						},
 					};
+					const renderPath = (blur) => do {
+						if (Array.isArray(render)) {
+							(
+								<g>
+									{render.map((points, i) =>
+										<path
+											key={`${k}-${i}`}
+											stroke={stroke}
+											srokeWidth={blur ? '2' : '1'}
+											filter={blur ? 'url(#vectorMonitorEffect)' : ''}
+											d={toPath(points)}
+										/>
+									)}
+								</g>
+							);
+						}
+						else if (typeof render === 'function') {
 
-					if (Array.isArray(render)) {
-						return (
-							<g
-								{...renderProps}
-							>
-								{render.map((points, i) =>
-									<path
-										key={`${k}-${i}`}
-										stroke={stroke}
-										d={toPath(points)}
-									/>
-								)}
-							</g>
-						);
-					}
-
-					if (typeof render === 'function') {
-
+						}
+						else {
+							(
+								<path
+									stroke={stroke}
+									srokeWidth={blur ? '2' : '1'}
+									filter={blur ? 'url(#vectorMonitorEffect)' : ''}
+									d={toPath(render)}
+									{...renderProps}
+								/>
+							);
+						}
 					}
 
 					return (
-						<path
-							stroke={stroke}
-							d={toPath(render)}
+						<g
 							{...renderProps}
-						/>
+						>
+							{renderPath()}
+							{renderPath(true)}
+						</g>
 					);
 				})}
 			</svg>
@@ -205,17 +215,6 @@ class Engine extends Component {
 			altKey,
 			ctrlKey,
 			shiftKey,
-		}));
-	}
-
-	handleResize() {
-		const {
-			width,
-			height,
-		} = this.props;
-
-		this.setState(Object.assign({}, this.state, {
-			scaler: Math.max(width / window.innerWidth, height / window.innerHeight),
 		}));
 	}
 }

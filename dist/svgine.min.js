@@ -164,23 +164,16 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 		this.tick = this.tick.bind(this);
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
-		this.handleResize = this.handleResize.bind(this);
-
-		this.state = {
-			scaler: 1
-		};
 	}
 
 	componentWillMount() {
 		window.addEventListener('keydown', this.handleKeyDown);
 		window.addEventListener('keyup', this.handleKeyUp);
-		window.addEventListener('resize', this.handleResize);
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener('keydown', this.handleKeyDown);
 		window.removeEventListener('keyup', this.handleKeyUp);
-		window.removeEventListener('resize', this.handleResize);
 	}
 
 	componentDidMount() {
@@ -215,9 +208,6 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 				gameObjects
 			} = {}
 		} = this.props;
-		var {
-			scaler
-		} = this.state;
 
 		return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 			'svg',
@@ -228,6 +218,16 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 				height: '100%',
 				preserveAspectRatio: 'xMidYMid'
 			},
+			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				'filter',
+				{
+					id: 'vectorMonitorEffect'
+				},
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('feGaussianBlur', {
+					'in': 'SourceGraphic',
+					stdDeviation: '2'
+				})
+			),
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('rect', {
 				sroke: 'none',
 				fill: background,
@@ -260,27 +260,33 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 						transform: `translate(${x}px, ${y}px) rotateZ(${rotation}deg) scale(${scaleX}, ${scaleY})`
 					}
 				};
-
-				if (Array.isArray(render)) {
-					return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				var renderPath = function (blur) {
+					return Array.isArray(render) ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						'g',
-						renderProps,
+						null,
 						render.map(function (points, i) {
 							return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('path', {
 								key: `${k}-${i}`,
 								stroke: stroke,
+								srokeWidth: blur ? '2' : '1',
+								filter: blur ? 'url(#vectorMonitorEffect)' : '',
 								d: toPath(points)
 							});
 						})
-					);
-				}
+					) : typeof render === 'function' ? void 0 : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('path', _extends({
+						stroke: stroke,
+						srokeWidth: blur ? '2' : '1',
+						filter: blur ? 'url(#vectorMonitorEffect)' : '',
+						d: toPath(render)
+					}, renderProps));
+				};
 
-				if (typeof render === 'function') {}
-
-				return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('path', _extends({
-					stroke: stroke,
-					d: toPath(render)
-				}, renderProps));
+				return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					'g',
+					renderProps,
+					renderPath(),
+					renderPath(true)
+				);
 			})
 		);
 	}
@@ -352,17 +358,6 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 			altKey,
 			ctrlKey,
 			shiftKey
-		}));
-	}
-
-	handleResize() {
-		var {
-			width,
-			height
-		} = this.props;
-
-		this.setState(Object.assign({}, this.state, {
-			scaler: Math.max(width / window.innerWidth, height / window.innerHeight)
 		}));
 	}
 }) || _class);

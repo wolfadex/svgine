@@ -26,23 +26,16 @@ var Engine = (_dec = connect(function ({
 		this.tick = this.tick.bind(this);
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
-		this.handleResize = this.handleResize.bind(this);
-
-		this.state = {
-			scaler: 1
-		};
 	}
 
 	componentWillMount() {
 		window.addEventListener('keydown', this.handleKeyDown);
 		window.addEventListener('keyup', this.handleKeyUp);
-		window.addEventListener('resize', this.handleResize);
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener('keydown', this.handleKeyDown);
 		window.removeEventListener('keyup', this.handleKeyUp);
-		window.removeEventListener('resize', this.handleResize);
 	}
 
 	componentDidMount() {
@@ -77,9 +70,6 @@ var Engine = (_dec = connect(function ({
 				gameObjects
 			} = {}
 		} = this.props;
-		var {
-			scaler
-		} = this.state;
 
 		return React.createElement(
 			'svg',
@@ -90,6 +80,16 @@ var Engine = (_dec = connect(function ({
 				height: '100%',
 				preserveAspectRatio: 'xMidYMid'
 			},
+			React.createElement(
+				'filter',
+				{
+					id: 'vectorMonitorEffect'
+				},
+				React.createElement('feGaussianBlur', {
+					'in': 'SourceGraphic',
+					stdDeviation: '2'
+				})
+			),
 			React.createElement('rect', {
 				sroke: 'none',
 				fill: background,
@@ -122,27 +122,33 @@ var Engine = (_dec = connect(function ({
 						transform: `translate(${x}px, ${y}px) rotateZ(${rotation}deg) scale(${scaleX}, ${scaleY})`
 					}
 				};
-
-				if (Array.isArray(render)) {
-					return React.createElement(
+				var renderPath = function (blur) {
+					return Array.isArray(render) ? React.createElement(
 						'g',
-						renderProps,
+						null,
 						render.map(function (points, i) {
 							return React.createElement('path', {
 								key: `${k}-${i}`,
 								stroke: stroke,
+								srokeWidth: blur ? '2' : '1',
+								filter: blur ? 'url(#vectorMonitorEffect)' : '',
 								d: toPath(points)
 							});
 						})
-					);
-				}
+					) : typeof render === 'function' ? void 0 : React.createElement('path', _extends({
+						stroke: stroke,
+						srokeWidth: blur ? '2' : '1',
+						filter: blur ? 'url(#vectorMonitorEffect)' : '',
+						d: toPath(render)
+					}, renderProps));
+				};
 
-				if (typeof render === 'function') {}
-
-				return React.createElement('path', _extends({
-					stroke: stroke,
-					d: toPath(render)
-				}, renderProps));
+				return React.createElement(
+					'g',
+					renderProps,
+					renderPath(),
+					renderPath(true)
+				);
 			})
 		);
 	}
@@ -214,17 +220,6 @@ var Engine = (_dec = connect(function ({
 			altKey,
 			ctrlKey,
 			shiftKey
-		}));
-	}
-
-	handleResize() {
-		var {
-			width,
-			height
-		} = this.props;
-
-		this.setState(Object.assign({}, this.state, {
-			scaler: Math.max(width / window.innerWidth, height / window.innerHeight)
 		}));
 	}
 }) || _class);
