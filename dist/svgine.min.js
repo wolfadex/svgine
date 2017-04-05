@@ -229,7 +229,7 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 				})
 			),
 			__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('rect', {
-				sroke: 'none',
+				stroke: 'none',
 				fill: background,
 				width: width,
 				height: height
@@ -260,25 +260,28 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 						transform: `translate(${x}px, ${y}px) rotateZ(${rotation}deg) scale(${scaleX}, ${scaleY})`
 					}
 				};
+				var pathProps = {
+					stroke,
+					fill: 'none'
+				};
 
 				if (Array.isArray(render)) {
 					return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						'g',
 						renderProps,
 						render.map(function (points, i) {
-							return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('path', {
-								key: `${k}-${i}`,
-								stroke: stroke,
+							return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('path', _extends({
+								key: `${k}-${i}`
+							}, pathProps, {
 								d: toPath(points)
-							});
+							}));
 						})
 					);
 				}
 
 				if (typeof render === 'function') {}
 
-				return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('path', _extends({
-					stroke: stroke,
+				return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('path', _extends({}, pathProps, {
 					d: toPath(render)
 				}, renderProps));
 			})

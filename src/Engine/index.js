@@ -75,7 +75,7 @@ class Engine extends Component {
 					/>
 				</filter>
 				<rect
-					sroke='none'
+					stroke='none'
 					fill={background}
 					width={width}
 					height={height}
@@ -106,6 +106,10 @@ class Engine extends Component {
 							transform: `translate(${x}px, ${y}px) rotateZ(${rotation}deg) scale(${scaleX}, ${scaleY})`,
 						},
 					};
+					const pathProps = {
+						stroke,
+						fill: 'none',
+					};
 
 					if (Array.isArray(render)) {
 						return (
@@ -115,7 +119,7 @@ class Engine extends Component {
 								{render.map((points, i) =>
 									<path
 										key={`${k}-${i}`}
-										stroke={stroke}
+										{...pathProps}
 										d={toPath(points)}
 									/>
 								)}
@@ -129,7 +133,7 @@ class Engine extends Component {
 
 					return (
 						<path
-							stroke={stroke}
+							{...pathProps}
 							d={toPath(render)}
 							{...renderProps}
 						/>
