@@ -106,45 +106,33 @@ class Engine extends Component {
 							transform: `translate(${x}px, ${y}px) rotateZ(${rotation}deg) scale(${scaleX}, ${scaleY})`,
 						},
 					};
-					const renderPath = (blur) => do {
-						if (Array.isArray(render)) {
-							(
-								<g>
-									{render.map((points, i) =>
-										<path
-											key={`${k}-${i}`}
-											stroke={stroke}
-											srokeWidth={blur ? '2' : '1'}
-											filter={blur ? 'url(#vectorMonitorEffect)' : ''}
-											d={toPath(points)}
-										/>
-									)}
-								</g>
-							);
-						}
-						else if (typeof render === 'function') {
 
-						}
-						else {
-							(
-								<path
-									stroke={stroke}
-									srokeWidth={blur ? '2' : '1'}
-									filter={blur ? 'url(#vectorMonitorEffect)' : ''}
-									d={toPath(render)}
-									{...renderProps}
-								/>
-							);
-						}
+					if (Array.isArray(render)) {
+						return (
+							<g
+								{...renderProps}
+							>
+								{render.map((points, i) =>
+									<path
+										key={`${k}-${i}`}
+										stroke={stroke}
+										d={toPath(points)}
+									/>
+								)}
+							</g>
+						);
+					}
+
+					if (typeof render === 'function') {
+
 					}
 
 					return (
-						<g
+						<path
+							stroke={stroke}
+							d={toPath(render)}
 							{...renderProps}
-						>
-							{renderPath()}
-							{renderPath(true)}
-						</g>
+						/>
 					);
 				})}
 			</svg>
