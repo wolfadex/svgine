@@ -260,33 +260,27 @@ var Engine = (_dec = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2_react_red
 						transform: `translate(${x}px, ${y}px) rotateZ(${rotation}deg) scale(${scaleX}, ${scaleY})`
 					}
 				};
-				var renderPath = function (blur) {
-					return Array.isArray(render) ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+
+				if (Array.isArray(render)) {
+					return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						'g',
-						null,
+						renderProps,
 						render.map(function (points, i) {
 							return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('path', {
 								key: `${k}-${i}`,
 								stroke: stroke,
-								srokeWidth: blur ? '2' : '1',
-								filter: blur ? 'url(#vectorMonitorEffect)' : '',
 								d: toPath(points)
 							});
 						})
-					) : typeof render === 'function' ? void 0 : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('path', _extends({
-						stroke: stroke,
-						srokeWidth: blur ? '2' : '1',
-						filter: blur ? 'url(#vectorMonitorEffect)' : '',
-						d: toPath(render)
-					}, renderProps));
-				};
+					);
+				}
 
-				return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-					'g',
-					renderProps,
-					renderPath(),
-					renderPath(true)
-				);
+				if (typeof render === 'function') {}
+
+				return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('path', _extends({
+					stroke: stroke,
+					d: toPath(render)
+				}, renderProps));
 			})
 		);
 	}

@@ -122,33 +122,27 @@ var Engine = (_dec = connect(function ({
 						transform: `translate(${x}px, ${y}px) rotateZ(${rotation}deg) scale(${scaleX}, ${scaleY})`
 					}
 				};
-				var renderPath = function (blur) {
-					return Array.isArray(render) ? React.createElement(
+
+				if (Array.isArray(render)) {
+					return React.createElement(
 						'g',
-						null,
+						renderProps,
 						render.map(function (points, i) {
 							return React.createElement('path', {
 								key: `${k}-${i}`,
 								stroke: stroke,
-								srokeWidth: blur ? '2' : '1',
-								filter: blur ? 'url(#vectorMonitorEffect)' : '',
 								d: toPath(points)
 							});
 						})
-					) : typeof render === 'function' ? void 0 : React.createElement('path', _extends({
-						stroke: stroke,
-						srokeWidth: blur ? '2' : '1',
-						filter: blur ? 'url(#vectorMonitorEffect)' : '',
-						d: toPath(render)
-					}, renderProps));
-				};
+					);
+				}
 
-				return React.createElement(
-					'g',
-					renderProps,
-					renderPath(),
-					renderPath(true)
-				);
+				if (typeof render === 'function') {}
+
+				return React.createElement('path', _extends({
+					stroke: stroke,
+					d: toPath(render)
+				}, renderProps));
 			})
 		);
 	}
